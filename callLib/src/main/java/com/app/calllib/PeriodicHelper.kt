@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 class PeriodicHelper(private val context: Context) {
 
     fun startLog() {
-        val mWorkManager = WorkManager.getInstance()
+        val mWorkManager = WorkManager.getInstance(context)
         val mConstraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Constraints.Builder()
                 .setRequiresStorageNotLow(false)
@@ -82,6 +82,6 @@ class PeriodicHelper(private val context: Context) {
         }
     }
     fun stopLog(){
-        WorkManager.getInstance().cancelAllWork()
+        WorkManager.getInstance(context).cancelAllWork()
     }
 }

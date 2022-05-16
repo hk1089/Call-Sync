@@ -70,10 +70,10 @@ class MainClass @Inject constructor(val context: Context) {
 
     private fun getStateOfWork(): WorkInfo.State {
         return try {
-            if (WorkManager.getInstance().getWorkInfosForUniqueWork(WORK_NAME)
+            if (WorkManager.getInstance(context).getWorkInfosForUniqueWork(WORK_NAME)
                     .get().size > 0
             ) {
-                WorkManager.getInstance().getWorkInfosForUniqueWork(WORK_NAME)
+                WorkManager.getInstance(context).getWorkInfosForUniqueWork(WORK_NAME)
                     .get()[0].state
             } else {
                 WorkInfo.State.CANCELLED
@@ -120,8 +120,8 @@ class MainClass @Inject constructor(val context: Context) {
                     if (subscriptionInfoList.isNotEmpty()) {
                         subscriptionInfoList.forEach {
                             val resultMap = java.util.HashMap<String, String>()
-                            resultMap.put("id", it.subscriptionId.toString())
-                            resultMap.put("name", it.carrierName.toString())
+                            resultMap["id"] = it.subscriptionId.toString()
+                            resultMap["name"] = it.carrierName.toString()
                             val jsonObject = JSONObject()
                             jsonObject.put("id", it.subscriptionId)
                             jsonObject.put("name", it.carrierName)
