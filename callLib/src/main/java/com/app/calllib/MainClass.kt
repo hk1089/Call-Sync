@@ -45,9 +45,13 @@ class MainClass @Inject constructor(val context: Context) {
 
     }
 
-    fun stopService(){
-        periodicHelper.stopLog()
+    fun stopService() {
+        Timber.d("stopService")
+        if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
+            periodicHelper.stopLog()
+
     }
+
     fun doTask() {
         if (context is FragmentActivity) {
             val permissionList = mutableListOf<String>()
@@ -107,6 +111,7 @@ class MainClass @Inject constructor(val context: Context) {
         if (getStateOfWork() != WorkInfo.State.ENQUEUED && getStateOfWork() != WorkInfo.State.RUNNING)
             periodicHelper.startLog()
     }
+
     @SuppressLint("MissingPermission")
     fun getSim(listener: (String) -> Unit) {
         val list = mutableListOf<String>()
@@ -128,7 +133,7 @@ class MainClass @Inject constructor(val context: Context) {
                             jsonObject.put("name", it.carrierName)
                             jsonArray.put(jsonObject)
                             resultList.add(resultMap)
-                            Timber.d( "Info>> ${it.carrierName}, ${it.subscriptionId}")
+                            Timber.d("Info>> ${it.carrierName}, ${it.subscriptionId}")
                         }
                     }
                     listener.invoke(jsonArray.toString())
