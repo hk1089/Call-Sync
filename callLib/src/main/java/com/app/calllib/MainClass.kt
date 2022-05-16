@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -46,7 +47,7 @@ class MainClass @Inject constructor(val context: Context) {
     }
 
     fun stopService() {
-        Timber.d("stopService")
+        Log.d("stopService>>>>>>> "," Try to stop")
         if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
             periodicHelper.stopLog()
 
