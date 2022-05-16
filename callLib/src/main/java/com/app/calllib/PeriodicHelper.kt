@@ -81,4 +81,7 @@ class PeriodicHelper(private val context: Context) {
             }
         }
     }
+    fun stopLog(){
+        WorkManager.getInstance().cancelAllWork()
+    }
 }

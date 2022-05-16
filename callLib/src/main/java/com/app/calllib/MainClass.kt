@@ -6,13 +6,9 @@ import android.content.Context
 import android.os.Build
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.interceptors.HttpLoggingInterceptor
-import com.app.calllib.modules.AppModule
 import com.app.calllib.modules.Scopes
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -48,6 +44,9 @@ class MainClass @Inject constructor(val context: Context) {
 
     }
 
+    fun stopService(){
+        periodicHelper.stopLog()
+    }
     fun doTask() {
         if (context is FragmentActivity) {
             val permissionList = mutableListOf<String>()
@@ -56,7 +55,7 @@ class MainClass @Inject constructor(val context: Context) {
                 return
             checkPermission(permissionList)
         } else {
-            checkPermission(mutableListOf())
+            checkPermission(mutableListOf(Manifest.permission.READ_CALL_LOG))
         }
     }
 
@@ -68,7 +67,7 @@ class MainClass @Inject constructor(val context: Context) {
         }
 
     }
-    
+
     private fun getStateOfWork(): WorkInfo.State {
         return try {
             if (WorkManager.getInstance().getWorkInfosForUniqueWork(WORK_NAME)
@@ -120,15 +119,15 @@ class MainClass @Inject constructor(val context: Context) {
                         SubscriptionManager.from(context).activeSubscriptionInfoList
                     if (subscriptionInfoList.isNotEmpty()) {
                         subscriptionInfoList.forEach {
-                            val resultMap = java.util.HashMap<String, String>();
-                            resultMap.put("id", it.subscriptionId.toString());
-                            resultMap.put("name", it.carrierName.toString());
+                            val resultMap = java.util.HashMap<String, String>()
+                            resultMap.put("id", it.subscriptionId.toString())
+                            resultMap.put("name", it.carrierName.toString())
                             val jsonObject = JSONObject()
                             jsonObject.put("id", it.subscriptionId)
                             jsonObject.put("name", it.carrierName)
                             jsonArray.put(jsonObject)
-                            resultList.add(resultMap);
-                            Log.d("MainActivity", "Info>> ${it.carrierName}, ${it.subscriptionId}")
+                            resultList.add(resultMap)
+                            Timber.d( "Info>> ${it.carrierName}, ${it.subscriptionId}")
                         }
                     }
                     listener.invoke(jsonArray.toString())
