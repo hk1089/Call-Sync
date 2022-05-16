@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Build
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -35,11 +34,12 @@ class MainClass @Inject constructor(val context: Context) {
         val userId = map["aduserid"] as Int
         prefStorage.userId = userId.toString()
         val lastSync = map["LAST_LOG_TIME"] as String?
-        if (lastSync.isNullOrEmpty())
-            getCurrentTime { prefStorage.lastCallLogSync = it }
-        else
-            prefStorage.lastCallLogSync = lastSync
-
+        if (prefStorage.lastCallLogSync.isEmpty()) {
+            if (lastSync.isNullOrEmpty())
+                getCurrentTime { prefStorage.lastCallLogSync = it }
+            else
+                prefStorage.lastCallLogSync = lastSync
+        }
         prefStorage.selectedSim = map["isSimSlot"] as String
         doTask()
 
@@ -49,21 +49,18 @@ class MainClass @Inject constructor(val context: Context) {
         periodicHelper.stopLog()
     }
     fun doTask() {
-        Log.d("MainClass","doTask")
-        val permissionList = mutableListOf<String>()
-        permissionList.add(Manifest.permission.READ_CALL_LOG)
-        Log.d("MainClass","doTask>>> ${getStateOfWork()}")
         if (context is FragmentActivity) {
+            val permissionList = mutableListOf<String>()
+            permissionList.add(Manifest.permission.READ_CALL_LOG)
             if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
                 return
             checkPermission(permissionList)
         } else {
-            checkPermission(permissionList)
+            checkPermission(mutableListOf())
         }
     }
 
     private fun checkPermission(permissionList: MutableList<String>) {
-        Log.d("MainClass","checkPermission")
         (context as FragmentActivity).permissions(permissionList) { allGranted, _, deniedList ->
             if (allGranted && deniedList.isEmpty()) {
                 periodicHelper.startLog()
