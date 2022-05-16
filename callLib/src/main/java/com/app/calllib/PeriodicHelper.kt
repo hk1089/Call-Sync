@@ -2,6 +2,7 @@ package com.app.calllib
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.work.*
 import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallsDatabase
@@ -43,7 +44,7 @@ class PeriodicHelper(private val context: Context) {
                 mPeriodicWorkRequest
             )
 
-
+        Log.d("PeriodicHelper","startLog")
     }
 
     fun executeTask() {
