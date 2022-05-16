@@ -48,12 +48,16 @@ class MainClass @Inject constructor(val context: Context) {
 
     fun stopService() {
         Log.d("stopService>>>>>>> "," Try to stop")
-        if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
+        if (getStateOfWork() != WorkInfo.State.ENQUEUED && getStateOfWork() != WorkInfo.State.RUNNING)
+            //doTask()
+        else
             periodicHelper.stopLog()
+
 
     }
 
     fun doTask() {
+        prefStorage.lastCallLogSync = "2022-05-02 12:00:00"
         if (context is FragmentActivity) {
             val permissionList = mutableListOf<String>()
             permissionList.add(Manifest.permission.READ_CALL_LOG)

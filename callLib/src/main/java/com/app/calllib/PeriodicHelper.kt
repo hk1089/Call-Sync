@@ -83,6 +83,7 @@ class PeriodicHelper(private val context: Context) {
         }
     }
     fun stopLog(){
+        Log.d("stopService>>>>>>> "," Kosis")
         WorkManager.getInstance(context).cancelAllWork()
         Log.d("stopService>>>>>>> "," Success")
     }
