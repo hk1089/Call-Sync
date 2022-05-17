@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show()*/
 
-            mainClass.stopService()
+            mainClass.stopService(this)
         }
     }
 

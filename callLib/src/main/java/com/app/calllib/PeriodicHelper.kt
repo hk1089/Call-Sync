@@ -9,6 +9,7 @@ import com.app.calllib.db.CallsDatabase
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 class PeriodicHelper(private val context: Context) {
@@ -82,9 +83,29 @@ class PeriodicHelper(private val context: Context) {
             }
         }
     }
-    fun stopLog(){
+    fun stopLog(context: Context){
         Log.d("stopService>>>>>>> "," Kosis")
         WorkManager.getInstance(context).cancelAllWork()
         Log.d("stopService>>>>>>> "," Success")
+        Log.d("stopService>>>>>>> "," ${getStateOfWork()}")
+    }
+
+    private fun getStateOfWork(): WorkInfo.State {
+        return try {
+            if (WorkManager.getInstance(context).getWorkInfosForUniqueWork(WORK_NAME)
+                    .get().size > 0
+            ) {
+                WorkManager.getInstance(context).getWorkInfosForUniqueWork(WORK_NAME)
+                    .get()[0].state
+            } else {
+                WorkInfo.State.CANCELLED
+            }
+        } catch (e: ExecutionException) {
+            e.printStackTrace()
+            WorkInfo.State.CANCELLED
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+            WorkInfo.State.CANCELLED
+        }
     }
 }

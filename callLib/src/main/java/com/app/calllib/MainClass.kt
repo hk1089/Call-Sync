@@ -46,12 +46,12 @@ class MainClass @Inject constructor(val context: Context) {
 
     }
 
-    fun stopService() {
+    fun stopService(context: Context) {
         Log.d("stopService>>>>>>> "," Try to stop")
         if (getStateOfWork() != WorkInfo.State.ENQUEUED && getStateOfWork() != WorkInfo.State.RUNNING)
-            //doTask()
+            doTask()
         else
-            periodicHelper.stopLog()
+            periodicHelper.stopLog(context)
 
 
     }
