@@ -99,6 +99,7 @@ class MainClass @Inject constructor(val context: Context) {
 
     fun checkPermissions(listener: (Boolean) -> Unit) {
         val permissionList = mutableListOf<String>()
+        permissionList.add(Manifest.permission.READ_PHONE_STATE)
         permissionList.add(Manifest.permission.READ_CALL_LOG)
         (context as FragmentActivity).permissions(
             permissionList

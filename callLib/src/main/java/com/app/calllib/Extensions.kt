@@ -154,13 +154,13 @@ fun FragmentActivity.permissions(
     PermissionX.init(this)
         .permissions(list)
         .explainReasonBeforeRequest()
-        .onExplainRequestReason { scope, deniedList ->
+        /*.onExplainRequestReason { scope, deniedList ->
             scope.showRequestReasonDialog(
                 deniedList,
                 "For Better Experience,Please Allow Required Permission",
                 "OK",
             )
-        }
+        }*/
         .onForwardToSettings { scope, deniedList ->
             scope.showForwardToSettingsDialog(
                 deniedList,
