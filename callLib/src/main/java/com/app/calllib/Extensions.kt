@@ -72,7 +72,10 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)).toInt()
 
                     callLogsData.number =
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
+                        if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) != null)
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
+                        else
+                            ""
                     callLogsData.datetime = sendDateFormat.format(
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
                     )
