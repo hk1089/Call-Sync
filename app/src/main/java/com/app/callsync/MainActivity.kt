@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabStart.setOnClickListener {view ->
+            mainClass.initializeValue(hashMapOf())
             mainClass.doTask()
         }
     }

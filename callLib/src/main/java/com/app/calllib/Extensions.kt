@@ -167,8 +167,11 @@ fun Context.getNetworkStatus(listener: (Boolean) -> Unit) {
 }
 
 fun getCurrentTime(listener: (String) -> Unit) {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, -10)
+
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-    listener.invoke(formatter.format(System.currentTimeMillis()))
+    listener.invoke(formatter.format(calendar.timeInMillis))
 }
 
 fun FragmentActivity.permissions(
