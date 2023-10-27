@@ -12,6 +12,7 @@ class PeriodicWork(private val context: Context, workerParameters: WorkerParamet
 
             periodicHelper = PeriodicHelper(context)
             periodicHelper.executeTask()
+            periodicHelper.startSingleLog()
             Result.success()
         } catch (e: Exception) {
             e.printStackTrace()

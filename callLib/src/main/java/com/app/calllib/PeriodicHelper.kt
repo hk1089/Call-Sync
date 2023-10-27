@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.work.*
 import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallsDatabase
+import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
@@ -48,13 +49,49 @@ class PeriodicHelper(private val context: Context) {
 
     }
 
+    fun startSingleLog() {
+        WorkManager.getInstance(context).cancelUniqueWork(ONE_TIME_WORK_NAME)
+        val mWorkManager = WorkManager.getInstance(context)
+        val mConstraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Constraints.Builder()
+                .setRequiresStorageNotLow(false)
+                .setRequiresBatteryNotLow(false)
+                .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
+        } else {
+            Constraints.Builder()
+                .setRequiresStorageNotLow(false)
+                .setRequiresBatteryNotLow(false)
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
+        }
+        val mOneTimeWorkRequest = OneTimeWorkRequest
+            .Builder(OneTimeWork::class.java)
+            .setInitialDelay(5L, TimeUnit.MINUTES)
+            .setConstraints(mConstraints)
+            .addTag(ONE_TIME_WORK_TAG)
+            .build()
+
+        mWorkManager
+            .enqueueUniqueWork(
+                ONE_TIME_WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                mOneTimeWorkRequest
+            )
+
+    }
+
+
     fun executeTask() {
 
         context.getCallLogs(prefStorage.lastCallLogSync) { dataList ->
-
             val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
             db.insertCalls(dataList)
             val fetchList = db.gelCallsForSend(false)
+            Timber.d("callss>> ${Gson().toJson(fetchList)}")
             val jsonArray = JSONArray()
             fetchList.forEach { callData ->
                 val jsObject = JSONObject()
@@ -67,7 +104,7 @@ class PeriodicHelper(private val context: Context) {
                 jsonArray.put(jsObject)
                 callData.isSent = true
             }
-            Timber.d("callss>> $jsonArray")
+            Timber.d("calls_request>> $jsonArray")
             val jsonObject = JSONObject()
             jsonObject.put("aduserid", prefStorage.userId)
             jsonObject.put("entrymode", prefStorage.entryMode)
@@ -84,10 +121,7 @@ class PeriodicHelper(private val context: Context) {
         }
     }
     fun stopLog(context: Context){
-        Log.d("stopService>>>>>>> "," Kosis")
         WorkManager.getInstance(context).cancelAllWork()
-        Log.d("stopService>>>>>>> "," Success")
-        Log.d("stopService>>>>>>> "," ${getStateOfWork()}")
     }
 
     private fun getStateOfWork(): WorkInfo.State {

@@ -28,6 +28,10 @@ class MainActivity : AppCompatActivity() {
 
             mainClass.stopService(this)
         }
+
+        binding.fabStart.setOnClickListener {view ->
+            mainClass.doTask()
+        }
     }
 
 

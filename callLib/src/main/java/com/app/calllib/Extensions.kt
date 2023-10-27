@@ -15,32 +15,35 @@ import java.util.*
 
 const val WORK_NAME = "CallFetch"
 const val WORK_TAG = "PeriodicCallWork"
+const val ONE_TIME_WORK_NAME = "oneTimeWorkNAME"
+const val ONE_TIME_WORK_TAG = "oneTimeWork"
 val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
-
+fun getDaysAgo(): Long {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, -15)
+    return calendar.timeInMillis
+}
 @SuppressLint("Recycle", "Range")
 fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit) {
-    val contentResolver = contentResolver
-    val filter = convertReverseTime(temp).toString()
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, -15)
+    val filter = if (temp.isNotEmpty())
+        convertReverseTime(temp).toString()
+    else
+        getDaysAgo().toString()
+
     val mSelectionClause = CallLog.Calls.DATE + " >= ?"
-    Timber.d("getCallLogs>>", "CallLogIsStart>> $filter")
+
     val mSelectionArgs = arrayOf(filter)
-    val cursor = if (filter.isNotEmpty())
-        contentResolver.query(
+    val cursor = contentResolver.query(
             CallLog.Calls.CONTENT_URI,
             null,
             mSelectionClause,
             mSelectionArgs,
             CallLog.Calls.DATE + " Desc"
         )
-    else
-        contentResolver.query(
-            CallLog.Calls.CONTENT_URI,
-            null,
-            null,
-            null,
-            CallLog.Calls.DATE + " Desc"
-        )
+
     try {
         if (cursor != null) {
             val totalCalls = cursor.count
@@ -69,17 +72,32 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                         else
                             ""
                     callLogsData.id =
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)).toInt()
+                        if (cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)) != null)
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)).toInt()
+                        else
+                            -1
 
                     callLogsData.number =
                         if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) != null)
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
                         else
                             ""
-                    callLogsData.datetime = sendDateFormat.format(
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
+                    if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)) == null)
+                        cursor.moveToNext()
+                    else if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE))
+                            .toLong() > System.currentTimeMillis()
                     )
-
+                        cursor.moveToNext()
+                    else {
+                        val callDate =
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
+                        if (callDate < calendar.timeInMillis)
+                            break
+                        callLogsData.datetime = sendDateFormat.format(
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
+                        )
+                    }
+                    callLogsData.timeMilli = cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
                     callLogsData.duration =
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION))
 
@@ -87,24 +105,28 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                         when {
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                 .toInt() == CallLog.Calls.INCOMING_TYPE -> "Incoming"
+
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                     == CallLog.Calls.OUTGOING_TYPE.toString() -> "Outgoing"
+
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                 .toInt() == CallLog.Calls.MISSED_TYPE -> "Missed"
+
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                 .toInt() == CallLog.Calls.REJECTED_TYPE -> "Rejected"
+
                             else -> ""
                         }
-
+                    if (callLogsData.timeMilli > System.currentTimeMillis())
+                        cursor.moveToNext()
                     if (prefStorage.selectedSim == subscriberId) {
                         logList.add(callLogsData)
-                    } else if (prefStorage.selectedSim == "SINGLE_SIM") {
+                    } else {
                         logList.add(callLogsData)
                     }
                     cursor.moveToNext()
                 }
             }
-
             listener.invoke(logList)
         }
     } catch (e: Exception) {
@@ -144,7 +166,7 @@ fun Context.getNetworkStatus(listener: (Boolean) -> Unit) {
     }
 }
 
-fun getCurrentTime(listener: (String) -> Unit){
+fun getCurrentTime(listener: (String) -> Unit) {
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
     listener.invoke(formatter.format(System.currentTimeMillis()))
 }

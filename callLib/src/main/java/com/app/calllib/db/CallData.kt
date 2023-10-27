@@ -12,5 +12,6 @@ data class CallData(
     var duration: String = "",
     var number: String = "",
     var type: String = "",
-    var isSent: Boolean = false
+    var isSent: Boolean = false,
+    var timeMilli: Long = 0L
 )

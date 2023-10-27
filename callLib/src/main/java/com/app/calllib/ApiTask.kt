@@ -1,6 +1,8 @@
 package com.app.calllib
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -9,6 +11,7 @@ import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallData
 import com.google.gson.Gson
 import org.json.JSONObject
+import java.util.Calendar
 
 
 class ApiTask {
@@ -25,7 +28,11 @@ class ApiTask {
                 override fun onResponse(response: JSONObject?) {
                     if (response != null && response.getBoolean("success")) {
                         db.update(list)
-
+                        val calendar = Calendar.getInstance()
+                        calendar.add(Calendar.DAY_OF_YEAR, -7)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            db.deleteAll(calendar.timeInMillis, true)
+                        }, 10000)
                     }
                 }
 
