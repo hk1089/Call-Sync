@@ -68,7 +68,7 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                         "-1"
                     callLogsData.name =
                         if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME)) != null)
-                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME))
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME)).replace("'", "")
                         else
                             ""
                     callLogsData.id =
