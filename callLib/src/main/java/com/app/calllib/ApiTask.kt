@@ -33,6 +33,7 @@ class ApiTask {
                         Handler(Looper.getMainLooper()).postDelayed({
                             db.deleteAll(calendar.timeInMillis, true)
                         }, 10000)
+                        getCurrentTime { prefStorage.lastCallLogSync = it }
                     }
                 }
 

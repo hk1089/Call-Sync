@@ -21,13 +21,13 @@ val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
 fun getDaysAgo(): Long {
     val calendar = Calendar.getInstance()
-    calendar.add(Calendar.DAY_OF_YEAR, -15)
+    calendar.add(Calendar.DAY_OF_YEAR, -7)
     return calendar.timeInMillis
 }
 @SuppressLint("Recycle", "Range")
 fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit) {
     val calendar = Calendar.getInstance()
-    calendar.add(Calendar.DAY_OF_YEAR, -15)
+    calendar.add(Calendar.DAY_OF_YEAR, -7)
     val filter = if (temp.isNotEmpty())
         convertReverseTime(temp).toString()
     else
@@ -168,8 +168,6 @@ fun Context.getNetworkStatus(listener: (Boolean) -> Unit) {
 
 fun getCurrentTime(listener: (String) -> Unit) {
     val calendar = Calendar.getInstance()
-    calendar.add(Calendar.DAY_OF_YEAR, -10)
-
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
     listener.invoke(formatter.format(calendar.timeInMillis))
 }

@@ -35,11 +35,18 @@ class MainClass @Inject constructor(val context: Context) {
         val userId = map["aduserid"] as Int
         prefStorage.userId = userId.toString()
         val lastSync = map["LAST_LOG_TIME"] as String?
-        if (prefStorage.lastCallLogSync.isEmpty()) {
-            if (lastSync.isNullOrEmpty())
+        val isDashboard = map["isDashboard"] as Boolean
+        if (!isDashboard) {
+            if (prefStorage.lastCallLogSync.isEmpty()) {
+                if (lastSync.isNullOrEmpty())
+                    getCurrentTime { prefStorage.lastCallLogSync = it }
+                else
+                    prefStorage.lastCallLogSync = lastSync
+            }
+        }else{
+            if (prefStorage.lastCallLogSync.isEmpty()) {
                 getCurrentTime { prefStorage.lastCallLogSync = it }
-            else
-                prefStorage.lastCallLogSync = lastSync
+            }
         }
         prefStorage.selectedSim = map["isSimSlot"] as String
         doTask()
