@@ -2,8 +2,12 @@ package com.app.calllib
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
 import android.util.Log
@@ -154,5 +158,28 @@ class MainClass @Inject constructor(val context: Context) {
                 }
             }
         }
+    }
+
+    fun canDrawOverlays(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.canDrawOverlays(context)
+        } else {
+            true
+        }
+    }
+
+    fun overlayPop(){
+        AlertDialog.Builder(context)
+            .setTitle("Please Enable the Draw Overlay permission")
+            .setMessage("You will not receive notifications while the app is in background if you disable these permissions")
+            .setPositiveButton(
+                "Go to Settings"
+            ) { dialog, which ->
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                intent.data = Uri.parse("package:com.elogist.dost")
+                context.startActivity(intent)
+            }
+            .setCancelable(false)
+            .show()
     }
 }
