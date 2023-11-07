@@ -67,6 +67,7 @@ class MainClass @Inject constructor(val context: Context) {
         if (context is FragmentActivity) {
             val permissionList = mutableListOf<String>()
             permissionList.add(Manifest.permission.READ_CALL_LOG)
+            permissionList.add(Manifest.permission.CALL_PHONE)
             if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
                 return
             checkPermission(permissionList)
