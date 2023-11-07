@@ -108,6 +108,7 @@ class MainClass @Inject constructor(val context: Context) {
         val permissionList = mutableListOf<String>()
         permissionList.add(Manifest.permission.READ_PHONE_STATE)
         permissionList.add(Manifest.permission.READ_CALL_LOG)
+        permissionList.add(Manifest.permission.CALL_PHONE)
         (context as FragmentActivity).permissions(
             permissionList
         ) { allGranted, _, deniedList ->
