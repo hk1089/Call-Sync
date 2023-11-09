@@ -43,13 +43,13 @@ class MainClass @Inject constructor(val context: Context) {
         if (!isDashboard) {
             if (prefStorage.lastCallLogSync.isEmpty()) {
                 if (lastSync.isNullOrEmpty())
-                    getCurrentTime { prefStorage.lastCallLogSync = it }
+                    get7DaysAgo { prefStorage.lastCallLogSync = it }
                 else
                     prefStorage.lastCallLogSync = lastSync
             }
         }else{
             if (prefStorage.lastCallLogSync.isEmpty()) {
-                getCurrentTime { prefStorage.lastCallLogSync = it }
+                get7DaysAgo { prefStorage.lastCallLogSync = it }
             }
         }
         prefStorage.selectedSim = map["isSimSlot"] as String

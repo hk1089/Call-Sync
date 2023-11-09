@@ -171,6 +171,12 @@ fun getCurrentTime(listener: (String) -> Unit) {
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
     listener.invoke(formatter.format(calendar.timeInMillis))
 }
+fun get7DaysAgo(listener: (String) -> Unit) {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, -7)
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    listener.invoke(formatter.format(calendar.timeInMillis))
+}
 
 fun FragmentActivity.permissions(
     list: List<String>,
