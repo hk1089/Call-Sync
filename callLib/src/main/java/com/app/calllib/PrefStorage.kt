@@ -14,11 +14,15 @@ class PrefStorage @Inject constructor(context: Context) {
     private val userIdPreferences = prefs.getString("userId")
     private val entryModePreferences = prefs.getString("entryMode")
     private val apiHeaderPreferences = prefs.getString("api_header")
+    private val authTokenPreferences = prefs.getString("auth_token")
 
 
     var lastCallLogSync
         get() = logSyncPreferences.get()
         set(value) = logSyncPreferences.set(value)
+    var authToken
+        get() = authTokenPreferences.get()
+        set(value) = authTokenPreferences.set(value)
 
     var selectedSim
         get() = selectedSimPreferences.get()

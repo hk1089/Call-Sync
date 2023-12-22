@@ -14,6 +14,9 @@ interface CallDao {
     @Query("Select * from calls_table where isSent=:status order by timeMilli desc")
     fun gelCallsForSend(status: Boolean): List<CallData>
 
+    @Query("Select * from calls_table order by timeMilli desc")
+    fun getCalls(): List<CallData>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun update(list: List<CallData>)
 

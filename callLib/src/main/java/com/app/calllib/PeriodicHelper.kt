@@ -2,16 +2,26 @@ package com.app.calllib
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallsDatabase
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
+
 
 class PeriodicHelper(private val context: Context) {
 
@@ -92,6 +102,7 @@ class PeriodicHelper(private val context: Context) {
             db.insertCalls(dataList)
             val fetchList = db.gelCallsForSend(false)
             Timber.d("callss>> ${Gson().toJson(fetchList)}")
+
             val jsonArray = JSONArray()
             fetchList.forEach { callData ->
                 val jsObject = JSONObject()
@@ -101,7 +112,8 @@ class PeriodicHelper(private val context: Context) {
                 jsObject.put("datetime", callData.datetime)
                 jsObject.put("duration", callData.duration)
                 jsObject.put("type", callData.type)
-                jsonArray.put(jsObject)
+                if (isValidDate(callData.datetime))
+                    jsonArray.put(jsObject)
                 callData.isSent = true
             }
             Timber.d("calls_request>> $jsonArray")
@@ -120,7 +132,8 @@ class PeriodicHelper(private val context: Context) {
             }
         }
     }
-    fun stopLog(context: Context){
+
+    fun stopLog(context: Context) {
         WorkManager.getInstance(context).cancelAllWork()
     }
 

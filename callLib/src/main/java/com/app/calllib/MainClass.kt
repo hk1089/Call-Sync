@@ -14,6 +14,8 @@ import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.app.calllib.db.CallDao
+import com.app.calllib.db.CallsDatabase
 import com.app.calllib.modules.Scopes
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -36,6 +38,7 @@ class MainClass @Inject constructor(val context: Context) {
         prefStorage.apiHeader = Gson().toJson(map["headers"])
         val header = map["headers"] as HashMap<*, *>
         prefStorage.entryMode = header["entrymode"] as String
+        prefStorage.authToken = header["authkey"] as String
         val userId = map["aduserid"] as Int
         prefStorage.userId = userId.toString()
         val lastSync = map["LAST_LOG_TIME"] as String?
@@ -178,5 +181,18 @@ class MainClass @Inject constructor(val context: Context) {
             }
             .setCancelable(false)
             .show()
+    }
+
+    fun sendLogs(){
+        val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
+        val dataList = db.getCalls()
+        val map = HashMap<String, String>()
+        map["authkey"] = prefStorage.authToken
+        map["entryMode"] = prefStorage.entryMode
+        map["foAdminId"] = prefStorage.userId
+        Log.d("MainClass", "dataList>>> ${Gson().toJson(dataList)}")
+        val jsArray = JSONArray(Gson().toJson(dataList))
+        Log.d("MainClass", "jsArray>>> $jsArray")
+        ApiTask().sendLogs(map, jsArray)
     }
 }

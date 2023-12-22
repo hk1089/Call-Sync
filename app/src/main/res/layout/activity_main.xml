@@ -28,7 +28,7 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_popup_sync" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabStart"
@@ -37,7 +37,7 @@
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:srcCompat="@android:drawable/ic_secure"
         android:layout_marginEnd="@dimen/fab_margin" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

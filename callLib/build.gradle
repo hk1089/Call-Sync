@@ -8,7 +8,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        minSdk 16
+        minSdk 21
         targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,6 +28,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
     namespace 'com.app.calllib'
 }
 
@@ -39,11 +42,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-
-    // ViewModel and LiveData
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    kapt 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
-
 
     // Database
     implementation "androidx.room:room-runtime:2.4.3"

@@ -13,5 +13,6 @@ data class CallData(
     var number: String = "",
     var type: String = "",
     var isSent: Boolean = false,
-    var timeMilli: Long = 0L
+    var timeMilli: Long = 0L,
+    var errorResponse: String = ""
 )

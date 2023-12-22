@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import com.app.calllib.db.CallData
 import com.permissionx.guolindev.PermissionX
 import timber.log.Timber
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,6 +20,18 @@ const val ONE_TIME_WORK_NAME = "oneTimeWorkNAME"
 const val ONE_TIME_WORK_TAG = "oneTimeWork"
 val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
+fun isValidDate(date: String): Boolean {
+    sendDateFormat.isLenient = false
+    return try{
+        sendDateFormat.parse(date)
+        println("date is valid")
+        true
+    }catch(e:Exception){
+        println("date is invalid")
+        false
+    }
+
+}
 fun getDaysAgo(): Long {
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.DAY_OF_YEAR, -7)
@@ -97,7 +110,11 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
                         )
                     }
+                    if (!isValidDate(callLogsData.datetime))
+                        cursor.moveToNext()
+
                     callLogsData.timeMilli = cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)).toLong()
+
                     callLogsData.duration =
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION))
 
@@ -203,4 +220,31 @@ fun FragmentActivity.permissions(
         .request { allGranted, grantedList, deniedList ->
             listener.invoke(allGranted, grantedList, deniedList)
         }
+}
+
+@Suppress("DEPRECATION")
+fun Context.createAppPackageMediaDir(): String? {
+    val directory: Array<File?> = externalMediaDirs
+    for (i in directory.indices) {
+        if (directory[i]!!.name.contains(packageName)) {
+            return directory[i]!!.absolutePath
+        }
+    }
+    return null
+}
+
+fun Context.getDbFolder(): File{
+    val parent = createAppPackageMediaDir()
+    val appFolder = File("$parent${File.separator}Call Data")
+    if (!appFolder.exists())
+        appFolder.mkdir()
+    return appFolder
+}
+
+fun Context.getApiFolder(): File{
+    val parent = createAppPackageMediaDir()
+    val appFolder = File("$parent${File.separator}Api Data")
+    if (!appFolder.exists())
+        appFolder.mkdir()
+    return appFolder
 }

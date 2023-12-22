@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [CallData::class], version = 2, exportSchema = false)
+@Database(entities = [CallData::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class CallsDatabase : RoomDatabase() {
 
@@ -22,7 +22,7 @@ abstract class CallsDatabase : RoomDatabase() {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
                         CallsDatabase::class.java, "CallsDost.db"
-                    ).allowMainThreadQueries()
+                    ).fallbackToDestructiveMigration().allowMainThreadQueries()
                         .build()
                 }
             }

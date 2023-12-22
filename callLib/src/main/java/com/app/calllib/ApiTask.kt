@@ -10,7 +10,14 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallData
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.util.Calendar
 
 
@@ -34,7 +41,38 @@ class ApiTask {
                             db.deleteAll(calendar.timeInMillis, true)
                         }, 10000)
                         getCurrentTime { prefStorage.lastCallLogSync = it }
+                    }else{
+                        list.forEach{
+                            it.isSent = false
+                            it.errorResponse = response.toString()
+                        }
+                        db.update(list)
                     }
+
+                }
+
+                override fun onError(anError: ANError?) {
+                    anError?.printStackTrace()
+                }
+
+            })
+
+    }
+
+    fun sendLogs(header: Map<String, String>, jsonObject: JSONArray) {
+        AndroidNetworking.post("https://xswift.biz/api//drivers/callSynchronus")
+            .addHeaders(header)
+            .addJSONArrayBody(jsonObject)
+            .setPriority(Priority.IMMEDIATE)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                    if (response != null && response.getBoolean("success")) {
+
+                    }else{
+
+                    }
+
                 }
 
                 override fun onError(anError: ANError?) {
