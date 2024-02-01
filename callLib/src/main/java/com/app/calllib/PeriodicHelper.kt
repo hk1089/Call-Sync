@@ -80,7 +80,7 @@ class PeriodicHelper(private val context: Context) {
         }
         val mOneTimeWorkRequest = OneTimeWorkRequest
             .Builder(OneTimeWork::class.java)
-            .setInitialDelay(5L, TimeUnit.MINUTES)
+            .setInitialDelay(1L, TimeUnit.MINUTES)
             .setConstraints(mConstraints)
             .addTag(ONE_TIME_WORK_TAG)
             .build()
