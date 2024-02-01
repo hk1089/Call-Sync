@@ -8,7 +8,7 @@ import com.app.calllib.modules.Scopes
 import timber.log.Timber
 import toothpick.Toothpick
 
-class AppClass : Application() {
+class  AppClass : Application() {
 
     override fun onCreate() {
         super.onCreate()
