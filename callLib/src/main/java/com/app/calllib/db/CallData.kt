@@ -1,30 +1,25 @@
 package com.app.calllib.db
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
+@kotlinx.parcelize.Parcelize
 @Entity(tableName = "calls_table")
 data class CallData(
     @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
-    @ColumnInfo(name = "callerID")
-    var callerID: String = "",
-    @ColumnInfo(name = "name")
-    var name: String = "",
-    @ColumnInfo(name = "datetime")
-    var datetime: String = "",
-    @ColumnInfo(name = "duration")
-    var duration: String = "",
-    @ColumnInfo(name = "number")
-    var number: String = "",
-    @ColumnInfo(name = "type")
-    var type: String = "",
-    @ColumnInfo(name = "isSent")
-    var isSent: Boolean = false,
-    @ColumnInfo(name = "timeMilli")
-    var timeMilli: Long = 0L,
-    @ColumnInfo(name = "errorResponse")
-    var errorResponse: String = ""
-)
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("callerID") var callerID: String = "",
+    @SerializedName("name") var name: String = "",
+    @SerializedName("datetime") var datetime: String = "",
+    @SerializedName("duration") var duration: String = "",
+    @SerializedName("number") var number: String = "",
+    @SerializedName("type") var type: String = "",
+    @SerializedName("isSent") var isSent: Boolean = false,
+    @SerializedName("timeMilli") var timeMilli: Long = 0L,
+    @SerializedName("errorResponse") var errorResponse: String = ""
+): Parcelable

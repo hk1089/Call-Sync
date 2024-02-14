@@ -11,7 +11,7 @@ interface CallDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCalls(list: List<CallData>)
 
-    @Query("Select * from calls_table where isSent=:status order by timeMilli desc")
+    @Query("Select * from calls_table ct where isSent=:status order by timeMilli desc")
     fun gelCallsForSend(status: Boolean): List<CallData>
 
     @Query("Select * from calls_table order by timeMilli desc")
