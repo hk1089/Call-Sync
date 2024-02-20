@@ -7,6 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.provider.CallLog
 import android.provider.Settings
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
@@ -56,6 +59,16 @@ class MainClass @Inject constructor(val context: Context) {
             }
         }
         prefStorage.selectedSim = map["isSimSlot"] as String
+       // if (!context.isServiceRunning(CallLogService::class.java)) {
+       //     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+       //         context.startForegroundService(Intent(context, CallLogService::class.java))
+       //     } else {
+       //         context.startService(Intent(context, CallLogService::class.java))
+       //     }
+       // }
+       // val callLogObserver = CallLogObserver(context.contentResolver, Handler(Looper.getMainLooper()))
+       // context.contentResolver.registerContentObserver(CallLog.Calls.CONTENT_URI, true, callLogObserver)
+
         doTask()
 
     }
