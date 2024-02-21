@@ -19,7 +19,7 @@ const val WORK_NAME = "CallFetch"
 const val WORK_TAG = "PeriodicCallWork"
 const val ONE_TIME_WORK_NAME = "oneTimeWorkNAME"
 const val ONE_TIME_WORK_TAG = "oneTimeWork"
-val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH)
+val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
 
 
 @Suppress("DEPRECATION")
@@ -161,7 +161,7 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
 }
 
 fun convertReverseTime(date: String): Long {
-    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH)
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
     return formatter.parse(date)!!.time
 }
 
@@ -194,13 +194,13 @@ fun Context.getNetworkStatus(listener: (Boolean) -> Unit) {
 
 fun getCurrentTime(listener: (String) -> Unit) {
     val calendar = Calendar.getInstance()
-    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH)
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
     listener.invoke(formatter.format(calendar.timeInMillis))
 }
 fun get7DaysAgo(listener: (String) -> Unit) {
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.DAY_OF_YEAR, -7)
-    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH)
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
     listener.invoke(formatter.format(calendar.timeInMillis))
 }
 

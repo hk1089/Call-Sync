@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             map["isSimSlot"] = "SINGLE_SIM"
             map["URL_CL"] = "https://xswift.biz/api//lr-module/setUserCallLogs"
             map["LAST_LOG_TIME"] = ""
+            map["is_cache_clear"] = false
             map["isDashboard"] = false
             map["trackCallLog"] = true
             val headerMap = HashMap<String, Any>()

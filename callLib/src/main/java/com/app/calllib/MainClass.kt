@@ -40,6 +40,7 @@ class MainClass @Inject constructor(val context: Context) {
         val isClear = map["is_cache_clear"] as Boolean
         if (isClear)
             prefStorage.clearData()
+        Log.d("MainClass","isClear")
 
         prefStorage.setCallLogsUrl = map["URL_CL"] as String
         prefStorage.apiHeader = Gson().toJson(map["headers"])
