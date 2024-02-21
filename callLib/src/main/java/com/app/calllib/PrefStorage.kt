@@ -43,4 +43,8 @@ class PrefStorage @Inject constructor(context: Context) {
     var apiHeader
         get() = apiHeaderPreferences.get()
         set(value) = apiHeaderPreferences.set(value)
+
+    fun clearData() {
+        prefs.clear()
+    }
 }

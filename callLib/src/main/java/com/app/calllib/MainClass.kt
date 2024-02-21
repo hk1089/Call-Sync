@@ -37,6 +37,10 @@ class MainClass @Inject constructor(val context: Context) {
     private var periodicHelper: PeriodicHelper = PeriodicHelper(context)
 
     fun initializeValue(map: HashMap<String, Any>) {
+        val isClear = map["is_cache_clear"] as Boolean
+        if (isClear)
+            prefStorage.clearData()
+
         prefStorage.setCallLogsUrl = map["URL_CL"] as String
         prefStorage.apiHeader = Gson().toJson(map["headers"])
         val header = map["headers"] as HashMap<*, *>
@@ -59,13 +63,13 @@ class MainClass @Inject constructor(val context: Context) {
             }
         }
         prefStorage.selectedSim = map["isSimSlot"] as String
-       // if (!context.isServiceRunning(CallLogService::class.java)) {
-       //     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-       //         context.startForegroundService(Intent(context, CallLogService::class.java))
-       //     } else {
-       //         context.startService(Intent(context, CallLogService::class.java))
-       //     }
-       // }
+        if (!context.isServiceRunning(CallLogService::class.java)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(Intent(context, CallLogService::class.java))
+            } else {
+                context.startService(Intent(context, CallLogService::class.java))
+            }
+        }
        // val callLogObserver = CallLogObserver(context.contentResolver, Handler(Looper.getMainLooper()))
        // context.contentResolver.registerContentObserver(CallLog.Calls.CONTENT_URI, true, callLogObserver)
 

@@ -36,7 +36,7 @@ class CallLogService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         generateForegroundNotification()
-        callLogObserver = CallLogObserver(contentResolver, Handler(Looper.getMainLooper()))
+        callLogObserver = CallLogObserver(this, contentResolver, Handler(Looper.getMainLooper()))
         contentResolver.registerContentObserver(
             CallLog.Calls.CONTENT_URI,
             true,
@@ -70,7 +70,7 @@ class CallLogService : Service() {
             val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
 
             builder.setContentTitle(
-                StringBuilder("elogiX Call Service").toString()
+                StringBuilder("elogiX Service").toString()
             ).setTicker(
                 StringBuilder("elogiX is running")
                     .toString()

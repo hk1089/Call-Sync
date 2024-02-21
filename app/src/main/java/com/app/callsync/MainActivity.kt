@@ -31,16 +31,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabStart.setOnClickListener {view ->
             val map = HashMap<String, Any>()
-            map["aduserid"] = 335
+            map["aduserid"] = 31288
             map["isSimSlot"] = "SINGLE_SIM"
-            map["URL_CL"] = "https://xswift.biz/booster_webservices/Admin/setUserCallLogs"
+            map["URL_CL"] = "https://xswift.biz/api//lr-module/setUserCallLogs"
             map["LAST_LOG_TIME"] = ""
             map["isDashboard"] = false
             map["trackCallLog"] = true
             val headerMap = HashMap<String, Any>()
             headerMap["Content-Type"] = "application/json"
-            headerMap["entrymode"] = "1"
-            headerMap["authkey"] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MzM1LCJuYW1lIjoiSGltYW5zaHUtVGVzdCIsIm1vYmlsZW5vIjoiOTExNjY1NjU0MyIsImVtYWlsIjpudWxsLCJ0aW1lIjoiMjAyMy0xMi0wN1QxMTowNjoyMyswNTozMCIsImVudHJ5bW9kZSI6MSwiZm9pZCI6bnVsbCwidHpvbmUiOjAsInNhdmVkIjoxLCJleHAiOjE3MzM0NjMzODN9.9WSGb2ZDie4ZZujAzEfdjjk7cro1HhDjua6ulHIJGO8"
+            headerMap["entrymode"] = "3"
+            headerMap["authkey"] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzE4NiwibmFtZSI6IkphaSBSdXBhbmEgRGhhbSBBc2hvayBSdW5ndGEiLCJtb2JpbGVubyI6OTkyODk0NDQ1NSwiZW1haWwiOiIiLCJ0aW1lIjoiMjAyNC0wMi0xNVQxNDoxNzoxMiswNTozMCIsImVudHJ5bW9kZSI6MywiZm9pZCI6NTEyLCJ0em9uZSI6LTIxMCwic2F2ZWQiOjEsImV4cCI6MTczOTUyMjgzMn0.JWsxRpkdIaUm7S0MATHgnQ3pCcc9TB-oi-fE9BTlWsc"
             map["headers"] = headerMap
             mainClass.initializeValue(map)
             mainClass.doTask()
