@@ -1,10 +1,12 @@
 package com.app.callsync
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.app.calllib.MainClass
 import com.app.callsync.databinding.ActivityMainBinding
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,8 +27,16 @@ class MainActivity : AppCompatActivity() {
            /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show()*/
-
-            mainClass.sendLogs()
+            if(android.util.Patterns.PHONE.matcher("+26-6057055113").matches())
+            // using android available method of checking phone
+            {
+                Toast.makeText(this, "MATCH", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(this, "NO MATCH", Toast.LENGTH_LONG).show();
+            }
+            //mainClass.sendLogs()
         }
 
         binding.fabStart.setOnClickListener {view ->

@@ -100,10 +100,20 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                             -1
 
                     callLogsData.number =
-                        if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) != null)
-                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
+                        if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) != null) {
+                            val number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
+                            if (number.contains("-"))
+                                number.replace("-", "")
+                            if (android.util.Patterns.PHONE.matcher(number).matches())
+                                number
+                            else
+                                ""
+                        }
                         else
                             ""
+                    if (callLogsData.number.isEmpty())
+                        cursor.moveToNext()
+
                     if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)) == null)
                         cursor.moveToNext()
                     else if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE))
