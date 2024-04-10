@@ -64,6 +64,7 @@ class MainClass @Inject constructor(val context: Context) {
             }
         }
         prefStorage.selectedSim = map["isSimSlot"] as String
+        prefStorage.simSlotIndex = map["sim_slot_index"] as String
         if (!context.isServiceRunning(CallLogService::class.java)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(Intent(context, CallLogService::class.java))

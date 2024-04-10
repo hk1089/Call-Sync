@@ -9,6 +9,7 @@ class PrefStorage @Inject constructor(context: Context) {
         RxSharedPreferences.create(context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE))
 
     private val logSyncPreferences = prefs.getString("call_logs_sync", "")
+    private val simSlotIndexPreferences = prefs.getString("sim_slot_index")
     private val selectedSimPreferences = prefs.getString("sim_selection")
     private val setCallLogsPreferences = prefs.getString("set_call_logs")
     private val userIdPreferences = prefs.getString("userId")
@@ -27,6 +28,10 @@ class PrefStorage @Inject constructor(context: Context) {
     var selectedSim
         get() = selectedSimPreferences.get()
         set(value) = selectedSimPreferences.set(value)
+
+    var simSlotIndex
+        get() = simSlotIndexPreferences.get()
+        set(value) = simSlotIndexPreferences.set(value)
 
     var setCallLogsUrl
         get() = setCallLogsPreferences.get()

@@ -118,6 +118,8 @@ class PeriodicHelper(private val context: Context) {
             }
             Timber.d("calls_request>> $jsonArray")
             val jsonObject = JSONObject()
+            jsonObject.put("simSlotNumber", prefStorage.simSlotIndex)
+            jsonObject.put("mobileNo", prefStorage.selectedSim)
             jsonObject.put("aduserid", prefStorage.userId)
             jsonObject.put("entrymode", prefStorage.entryMode)
             jsonObject.put("callInfo", jsonArray.toString())
