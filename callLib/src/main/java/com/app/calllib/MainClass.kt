@@ -11,9 +11,13 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.CallLog
 import android.provider.Settings
+import android.telecom.PhoneAccount
+import android.telecom.PhoneAccountHandle
+import android.telecom.TelecomManager
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -200,6 +204,69 @@ class MainClass @Inject constructor(val context: Context) {
             }
             .setCancelable(false)
             .show()
+    }
+
+    @SuppressLint("MissingPermission")
+    fun simAvailable(): Int {
+        var count = 0
+        val sManager =
+            context.getSystemService(AppCompatActivity.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+        val infoSim1 = sManager.getActiveSubscriptionInfoForSimSlotIndex(0)
+        val infoSim2 = sManager.getActiveSubscriptionInfoForSimSlotIndex(1)
+        if (infoSim1 != null)
+            count = count.plus(1)
+        if (infoSim2 != null)
+            count = count.plus(1)
+        return count
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getSimDetails(): MutableMap<String, Int> {
+        val sManager =
+            context.getSystemService(AppCompatActivity.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+        val infoSim1 = sManager.getActiveSubscriptionInfoForSimSlotIndex(0)
+        val infoSim2 = sManager.getActiveSubscriptionInfoForSimSlotIndex(1)
+        var slot1 = -1
+        var slot2 = -1
+        if (infoSim1 != null) {
+            slot1 = findSlotFromSubId(sManager, infoSim1.subscriptionId)
+            Log.d("MainClass", "infoSim1 simSlotIndex>> $slot1")
+        }
+        if (infoSim2 != null) {
+            slot2 = findSlotFromSubId(sManager, infoSim2.subscriptionId)
+            Log.d("MainClass", "infoSim2 simSlotIndex>> $slot2")
+        }
+        return getSimSubscriptionId(slot1, slot2)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getSimSubscriptionId(slot1: Int, slot2: Int): MutableMap<String, Int> {
+        val telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+        val map = mutableMapOf<String, Int>()
+        telecomManager.callCapablePhoneAccounts.forEachIndexed { index, account: PhoneAccountHandle ->
+            val phoneAccount: PhoneAccount = telecomManager.getPhoneAccount(account)
+            val accountId: String = phoneAccount.accountHandle.id
+            if (slot1 != -1 && index == 0)
+                map[accountId] = slot1
+            else if (slot2 != -1)
+                map[accountId] = slot2
+        }
+        Log.d("MainClass", "subId>> ${map}")
+        return map
+    }
+
+    private fun findSlotFromSubId(sm: SubscriptionManager, subId: Int): Int {
+        try {
+            for (s in sm.activeSubscriptionInfoList) {
+                Log.d("MainClass", "rounding>> ${s.subscriptionId}")
+                if (s.subscriptionId == subId) {
+                    return s.simSlotIndex + 1
+                }
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+        return -1
     }
 
     fun sendLogs(){
