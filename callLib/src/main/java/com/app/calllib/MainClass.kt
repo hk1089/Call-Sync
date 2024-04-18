@@ -139,6 +139,9 @@ class MainClass @Inject constructor(val context: Context) {
         permissionList.add(Manifest.permission.READ_PHONE_STATE)
         permissionList.add(Manifest.permission.READ_CALL_LOG)
         permissionList.add(Manifest.permission.CALL_PHONE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            permissionList.add(Manifest.permission.READ_PHONE_NUMBERS)
+        }
         (context as FragmentActivity).permissions(
             permissionList
         ) { allGranted, _, deniedList ->
