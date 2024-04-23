@@ -141,6 +141,8 @@ class CallLogObserver(
                     jsonObject.put("aduserid", prefStorage.userId)
                     jsonObject.put("entrymode", prefStorage.entryMode)
                     jsonObject.put("callInfo", jsonArray.toString())
+                    Log.d("CallLogObserver", "saved subscriberId>> ${prefStorage.selectedSim}")
+                    Log.d("CallLogObserver", "subscriberId>> ${subscriberId}")
                     if (prefStorage.selectedSim == subscriberId) {
                         db.insertCalls(logList)
                         logList.add(callLogsData)
