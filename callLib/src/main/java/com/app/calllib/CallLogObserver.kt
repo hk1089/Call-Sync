@@ -156,19 +156,6 @@ class CallLogObserver(
                                 )
                             }
                         }
-                    } else {
-                        db.insertCalls(logList)
-                        logList.add(callLogsData)
-                        callLogsData.isSent = true
-                        context.getNetworkStatus { connected ->
-                            if (connected) {
-                                ApiTask().sendCallLogs(
-                                    context,
-                                    com.app.calllib.prefStorage.apiHeader,
-                                    jsonObject, db, logList
-                                )
-                            }
-                        }
                     }
                 }
             }
