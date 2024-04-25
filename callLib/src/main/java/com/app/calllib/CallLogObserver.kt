@@ -104,7 +104,8 @@ class CallLogObserver(
 
                     callLogsData.duration =
                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION))
-
+                    Timber.d("callType>>> ${cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                        .toInt()}")
                     callLogsData.type =
                         when {
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
@@ -118,6 +119,19 @@ class CallLogObserver(
 
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                 .toInt() == CallLog.Calls.REJECTED_TYPE -> "Rejected"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 10 -> "VoWiFi Outgoing"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 20 -> "VoWiFi Incoming"
+
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 100 -> "VoWiFi Outgoing"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 101 -> "VoWiFi Incoming"
 
                             else -> ""
                         }

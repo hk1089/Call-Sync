@@ -53,8 +53,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabStart.setOnClickListener { view ->
             val map = HashMap<String, Any>()
-            map["aduserid"] = 31288
-            map["isSimSlot"] = "SINGLE_SIM"
+            map["sim_slot_index"] = "1"
+            map["aduserid"] = 419
+            map["isSimSlot"] = "89918680400238854737"
             map["URL_CL"] = "https://xswift.biz/api//lr-module/setUserCallLogs"
             map["LAST_LOG_TIME"] = ""
             map["is_cache_clear"] = false
@@ -62,9 +63,9 @@ class MainActivity : AppCompatActivity() {
             map["trackCallLog"] = true
             val headerMap = HashMap<String, Any>()
             headerMap["Content-Type"] = "application/json"
-            headerMap["entrymode"] = "3"
+            headerMap["entrymode"] = "1"
             headerMap["authkey"] =
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzE4NiwibmFtZSI6IkphaSBSdXBhbmEgRGhhbSBBc2hvayBSdW5ndGEiLCJtb2JpbGVubyI6OTkyODk0NDQ1NSwiZW1haWwiOiIiLCJ0aW1lIjoiMjAyNC0wMi0xNVQxNDoxNzoxMiswNTozMCIsImVudHJ5bW9kZSI6MywiZm9pZCI6NTEyLCJ0em9uZSI6LTIxMCwic2F2ZWQiOjEsImV4cCI6MTczOTUyMjgzMn0.JWsxRpkdIaUm7S0MATHgnQ3pCcc9TB-oi-fE9BTlWsc"
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NDE5LCJuYW1lIjoiQW5raXQgSmFuZ2lkIiwibW9iaWxlbm8iOiI2Mzc2NzYwMDc4IiwiZW1haWwiOm51bGwsInRpbWUiOiIyMDI0LTA0LTIzVDE3OjAwOjMzKzA1OjMwIiwiZW50cnltb2RlIjoxLCJmb2lkIjpudWxsLCJ0em9uZSI6MCwic2F2ZWQiOjEsImV4cCI6MTc0NTQwNzgzM30.T3MQpxpc94o6E-ZO_DD5HMUm7O5rZyvQuD0dBDJ2XtY"
             map["headers"] = headerMap
             mainClass.initializeValue(map)
             mainClass.doTask()

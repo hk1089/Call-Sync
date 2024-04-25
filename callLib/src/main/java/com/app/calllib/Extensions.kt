@@ -151,6 +151,18 @@ fun Context.getCallLogs(temp: String, listener: (MutableList<CallData>) -> Unit)
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
                                 .toInt() == CallLog.Calls.REJECTED_TYPE -> "Rejected"
 
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 10 -> "VoWiFi Outgoing"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 20 -> "VoWiFi Incoming"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 100 -> "VoWiFi Outgoing"
+
+                            cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))
+                                .toInt() == 101 -> "VoWiFi Incoming"
+
                             else -> ""
                         }
                     if (callLogsData.timeMilli > System.currentTimeMillis())
