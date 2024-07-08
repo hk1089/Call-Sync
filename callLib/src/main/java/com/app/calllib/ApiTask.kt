@@ -3,6 +3,7 @@ package com.app.calllib
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -38,7 +39,8 @@ class ApiTask {
                         val calendar = Calendar.getInstance()
                         calendar.add(Calendar.DAY_OF_YEAR, -7)
                         Handler(Looper.getMainLooper()).postDelayed({
-                            db.deleteAll(calendar.timeInMillis, true)
+                            val query = SimpleSQLiteQuery("DELETE FROM calls_table WHERE timeMilli < ? AND isSent = ?", arrayOf(calendar.timeInMillis, true))
+                            db.deleteAll(query)
                         }, 10000)
                         getCurrentTime { prefStorage.lastCallLogSync = it }
                     }else{

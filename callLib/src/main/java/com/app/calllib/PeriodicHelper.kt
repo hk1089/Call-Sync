@@ -2,6 +2,7 @@ package com.app.calllib
 
 import android.content.Context
 import android.os.Build
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -100,7 +101,9 @@ class PeriodicHelper(private val context: Context) {
         context.getCallLogs(prefStorage.lastCallLogSync) { dataList ->
             val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
             db.insertCalls(dataList)
-            val fetchList = db.gelCallsForSend(false)
+            val query = SimpleSQLiteQuery("Select * from calls_table ct where isSent=? order by timeMilli desc", arrayOf(false))
+            val fetchList = db.gelCallsForSend(query)
+            // db.gelCallsForSend(false)
             Timber.d("callss>> ${Gson().toJson(fetchList)}")
 
             val jsonArray = JSONArray()

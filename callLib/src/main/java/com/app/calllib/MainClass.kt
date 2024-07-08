@@ -19,6 +19,7 @@ import android.telephony.SubscriptionManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.app.calllib.db.CallDao
@@ -274,7 +275,8 @@ class MainClass @Inject constructor(val context: Context) {
 
     fun sendLogs(){
         val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
-        val dataList = db.getCalls()
+        val query = SimpleSQLiteQuery("Select * from calls_table order by timeMilli desc")
+        val dataList = db.getCalls(query)
         val map = HashMap<String, String>()
         map["authkey"] = prefStorage.authToken
         map["entryMode"] = prefStorage.entryMode
