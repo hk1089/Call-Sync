@@ -99,6 +99,9 @@ class MainClass @Inject constructor(val context: Context) {
             val permissionList = mutableListOf<String>()
             permissionList.add(Manifest.permission.READ_CALL_LOG)
             permissionList.add(Manifest.permission.CALL_PHONE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissionList.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
             if (getStateOfWork() == WorkInfo.State.ENQUEUED && getStateOfWork() == WorkInfo.State.RUNNING)
                 return
             checkPermission(permissionList)
