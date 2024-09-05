@@ -30,12 +30,15 @@ class MainActivity : AppCompatActivity() {
         val mainClass = MainClass(this)
 
         binding.fab.setOnClickListener { view ->
-            val telecomManager =
-                getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+            val map = mainClass.checkStorage()
+            println("Total Storage: ${map["total"]}")
+            println("Available Storage: ${map["available"]}")
+            /*val telecomManager =
+                getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager*/
            // val indext = getSimSlotIndexFromAccountId("8991000905134583709F")
          //   Log.d("MainActivity", "indext>> ${indext}")
-            Log.d("MainActivity", "isSimAvailable>> ${simAvailable()}")
-            Log.d("MainActivity", "isSimAvailable>> ${isSimAvailable()}")
+         //   Log.d("MainActivity", "isSimAvailable>> ${simAvailable()}")
+         //   Log.d("MainActivity", "isSimAvailable>> ${isSimAvailable()}")
             /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show()*/

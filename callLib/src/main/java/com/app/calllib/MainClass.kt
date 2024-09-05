@@ -45,7 +45,7 @@ class MainClass @Inject constructor(val context: Context) {
         val isClear = map["is_cache_clear"] as Boolean
         if (isClear)
             prefStorage.clearData()
-        Log.d("MainClass","isClear")
+        Log.d("MainClass", "isClear")
 
         prefStorage.setCallLogsUrl = map["URL_CL"] as String
         prefStorage.apiHeader = Gson().toJson(map["headers"])
@@ -63,7 +63,7 @@ class MainClass @Inject constructor(val context: Context) {
                 else
                     prefStorage.lastCallLogSync = lastSync
             }
-        }else{
+        } else {
             if (prefStorage.lastCallLogSync.isEmpty()) {
                 get7DaysAgo { prefStorage.lastCallLogSync = it }
             }
@@ -77,8 +77,8 @@ class MainClass @Inject constructor(val context: Context) {
                 context.startService(Intent(context, CallLogService::class.java))
             }
         }
-       // val callLogObserver = CallLogObserver(context.contentResolver, Handler(Looper.getMainLooper()))
-       // context.contentResolver.registerContentObserver(CallLog.Calls.CONTENT_URI, true, callLogObserver)
+        // val callLogObserver = CallLogObserver(context.contentResolver, Handler(Looper.getMainLooper()))
+        // context.contentResolver.registerContentObserver(CallLog.Calls.CONTENT_URI, true, callLogObserver)
 
         doTask()
 
@@ -94,7 +94,7 @@ class MainClass @Inject constructor(val context: Context) {
     }
 
     fun doTask() {
-       // prefStorage.lastCallLogSync = "2022-05-02 12:00:00"
+        // prefStorage.lastCallLogSync = "2022-05-02 12:00:00"
         if (context is FragmentActivity) {
             val permissionList = mutableListOf<String>()
             permissionList.add(Manifest.permission.READ_CALL_LOG)
@@ -201,7 +201,7 @@ class MainClass @Inject constructor(val context: Context) {
 
     }
 
-    fun overlayPop(){
+    fun overlayPop() {
         AlertDialog.Builder(context)
             .setTitle("Please Enable the Draw Overlay permission")
             .setMessage("You will not receive notifications while the app is in background if you disable these permissions")
@@ -279,7 +279,7 @@ class MainClass @Inject constructor(val context: Context) {
         return -1
     }
 
-    fun sendLogs(){
+    fun sendLogs() {
         val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
         val query = SimpleSQLiteQuery("Select * from calls_table order by timeMilli desc")
         val dataList = db.getCalls(query)
@@ -291,5 +291,11 @@ class MainClass @Inject constructor(val context: Context) {
         val jsArray = JSONArray(Gson().toJson(dataList))
         Log.d("MainClass", "jsArray>>> $jsArray")
         ApiTask().sendLogs(map, jsArray)
+    }
+
+    fun checkStorage() : MutableMap<String, String> {
+        val formattedTotalStorage = StorageUtils.formatSize(StorageUtils.getTotalStorage())
+        val formattedAvailableStorage = StorageUtils.formatSize(StorageUtils.getAvailableStorage())
+        return mutableMapOf("available" to formattedAvailableStorage, "total" to formattedTotalStorage)
     }
 }
