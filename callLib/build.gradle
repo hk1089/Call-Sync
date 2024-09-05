@@ -64,7 +64,7 @@ dependencies {
     //logger
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
-    implementation 'com.amitshekhar.android:rx-android-networking:1.0.2'
+    implementation 'com.github.amitshekhariitbhu.Fast-Android-Networking:android-networking:1.0.4'
 
     //DI
     implementation 'com.github.stephanenicolas.toothpick:toothpick-runtime:3.1.0'
