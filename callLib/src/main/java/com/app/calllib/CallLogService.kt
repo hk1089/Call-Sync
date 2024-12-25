@@ -66,6 +66,14 @@ class CallLogService : Service() {
         private const val NOTIFICATION_CHANNEL_ID = "dost_call_log_reading"
     }
     private fun generateForegroundNotification() {
+        val dismissedIntent = Intent("DISMISSED_ACTION")
+        dismissedIntent.setPackage(packageName) // This is required on Android 14
+        val dismissedPendingIntent = PendingIntent.getBroadcast(
+            this,
+            111,
+            dismissedIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val mNotificationManager =
@@ -91,7 +99,8 @@ class CallLogService : Service() {
             ).setTicker(
                 StringBuilder("elogiX is running")
                     .toString()
-            ).setSmallIcon(R.drawable.dost_logo)
+            )
+                .setDeleteIntent(dismissedPendingIntent).setSmallIcon(R.drawable.dost_logo)
                 .setPriority(NotificationCompat.PRIORITY_LOW).setWhen(0).setOnlyAlertOnce(true)
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
                 .setOngoing(true)
