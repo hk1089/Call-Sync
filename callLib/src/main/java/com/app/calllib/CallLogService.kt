@@ -6,10 +6,13 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -21,9 +24,19 @@ class CallLogService : Service() {
     private lateinit var callLogObserver: CallLogObserver
     override fun onCreate() {
         super.onCreate()
-
+        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                onNotificationDismissedReceiver,
+                IntentFilter("DISMISSED_ACTION"),
+                RECEIVER_NOT_EXPORTED // This is required on Android 14
+            )
+        }
     }
-
+    private val onNotificationDismissedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            generateForegroundNotification()
+        }
+    }
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -32,6 +45,10 @@ class CallLogService : Service() {
         super.onDestroy()
         if (this::callLogObserver.isInitialized)
             contentResolver.unregisterContentObserver(callLogObserver)
+
+        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            unregisterReceiver(onNotificationDismissedReceiver)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
