@@ -69,8 +69,7 @@ class CallLogService : Service() {
         val dismissedIntent = Intent("DISMISSED_ACTION")
         dismissedIntent.setPackage(packageName) // This is required on Android 14
         val dismissedPendingIntent = PendingIntent.getBroadcast(
-            this,
-            111,
+            this, 111,
             dismissedIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
