@@ -112,7 +112,7 @@ class PeriodicHelper(private val context: Context) {
                 jsObject.put("callerID", callData.callerID)
                 jsObject.put("name", callData.name)
                 jsObject.put("number", callData.number)
-                jsObject.put("datetime", callData.datetime)
+                jsObject.put("datetime", convertMillisecondsToUTC(callData.timeMilli))
                 jsObject.put("duration", callData.duration)
                 jsObject.put("type", callData.type)
                 if (isValidDate(callData.datetime))
@@ -121,6 +121,7 @@ class PeriodicHelper(private val context: Context) {
             }
             Timber.d("calls_request>> $jsonArray")
             val jsonObject = JSONObject()
+            jsonObject.put("isUtc", true)
             jsonObject.put("simSlotNumber", prefStorage.simSlotIndex)
             jsonObject.put("mobileNo", prefStorage.selectedSim)
             jsonObject.put("aduserid", prefStorage.userId)

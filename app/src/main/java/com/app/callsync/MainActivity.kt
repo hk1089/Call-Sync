@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.app.calllib.MainClass
+import com.app.calllib.convertMillisecondsToUTC
 import com.app.callsync.databinding.ActivityMainBinding
 
 
@@ -30,9 +31,11 @@ class MainActivity : AppCompatActivity() {
         val mainClass = MainClass(this)
 
         binding.fab.setOnClickListener { view ->
-            val map = mainClass.checkStorage()
-            println("Total Storage: ${map["total"]}")
-            println("Available Storage: ${map["available"]}")
+            //val map = mainClass.checkStorage()
+            val utc = convertMillisecondsToUTC(System.currentTimeMillis())
+            //println("Total Storage: ${map["total"]}")
+           // println("Available Storage: ${map["available"]}")
+            println("Available utc: ${utc}")
             /*val telecomManager =
                 getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager*/
            // val indext = getSimSlotIndexFromAccountId("8991000905134583709F")

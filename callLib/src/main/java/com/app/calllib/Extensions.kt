@@ -264,6 +264,13 @@ fun Context.createAppPackageMediaDir(): String? {
     return null
 }
 
+fun convertMillisecondsToUTC(milliseconds: Long): String {
+    val date = Date(milliseconds)
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS")
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    return sdf.format(date)
+}
+
 fun Context.getDbFolder(): File{
     val parent = createAppPackageMediaDir()
     val appFolder = File("$parent${File.separator}Call Data")
