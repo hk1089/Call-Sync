@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             headerMap["Content-Type"] = "application/json"
             headerMap["entrymode"] = "1"
             headerMap["authkey"] =
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NDE5LCJuYW1lIjoiQW5raXQgSmFuZ2lkIiwibW9iaWxlbm8iOiI2Mzc2NzYwMDc4IiwiZW1haWwiOm51bGwsInRpbWUiOiIyMDI0LTA0LTIzVDE3OjAwOjMzKzA1OjMwIiwiZW50cnltb2RlIjoxLCJmb2lkIjpudWxsLCJ0em9uZSI6MCwic2F2ZWQiOjEsImV4cCI6MTc0NTQwNzgzM30.T3MQpxpc94o6E-ZO_DD5HMUm7O5rZyvQuD0dBDJ2XtY"
+                "eyJhbGciOiJIUzI1NiJ9.eyJpc0N0VXNlciI6dHJ1ZSwibmFtZSI6IkFua2l0IEphbmdpZCIsInRpbWUiOiIyMDI0LTA5LTAzVDExOjM3OjUxLjExNzIzMFoiLCJtb2JpbGVObyI6NjM3Njc2MDA3OCwiaWQiOjQxOSwiZXhwIjoxNzU1MDY2NDc4LCJpYXQiOjE3NTQ5ODAwNzgsImVtYWlsIjpudWxsLCJlbnRyeU1vZGUiOjF9.yRPxKAKTzo3c16Ipk-pSGfbx1fgbDC_MWhNNLe1BLbQ"
             map["headers"] = headerMap
             mainClass.initializeValue(map)
             mainClass.doTask()

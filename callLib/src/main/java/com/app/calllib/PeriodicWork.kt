@@ -3,6 +3,9 @@ package com.app.calllib
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PeriodicWork(private val context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
@@ -12,7 +15,9 @@ class PeriodicWork(private val context: Context, workerParameters: WorkerParamet
 
             periodicHelper = PeriodicHelper(context)
             periodicHelper.executeTask()
-            periodicHelper.startSingleLog()
+            CoroutineScope(Dispatchers.IO).launch {
+                periodicHelper.startSingleLog()
+            }
             Result.success()
         } catch (e: Exception) {
             e.printStackTrace()

@@ -8,6 +8,9 @@ import androidx.work.WorkerParameters
 import com.app.calllib.modules.Scopes
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import toothpick.Toothpick
 import java.util.concurrent.TimeUnit
@@ -23,7 +26,9 @@ class OneTimeWork(private val context: Context, workerParameters: WorkerParamete
         val prefStorage: PrefStorage =
             Toothpick.openScope(Scopes.APP).getInstance(PrefStorage::class.java)
         periodicHelper.executeTask()
-        periodicHelper.startSingleLog()
+        CoroutineScope(Dispatchers.IO).launch {
+            periodicHelper.startSingleLog()
+        }
         return Result.success()
     }
 }

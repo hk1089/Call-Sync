@@ -54,6 +54,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlin:kotlin-reflect:2.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.10.2")
 
     // For WorkManager.
     implementation 'androidx.work:work-runtime:2.10.3'

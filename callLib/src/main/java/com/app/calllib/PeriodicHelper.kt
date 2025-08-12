@@ -8,12 +8,16 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.app.calllib.db.CallDao
 import com.app.calllib.db.CallsDatabase
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
@@ -60,39 +64,23 @@ class PeriodicHelper(private val context: Context) {
 
     }
 
-    fun startSingleLog() {
-        WorkManager.getInstance(context).cancelUniqueWork(ONE_TIME_WORK_NAME)
-        val mWorkManager = WorkManager.getInstance(context)
-        val mConstraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Constraints.Builder()
-                .setRequiresStorageNotLow(false)
-                .setRequiresBatteryNotLow(false)
-                .setRequiresCharging(false)
-                .setRequiresDeviceIdle(false)
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build()
-        } else {
-            Constraints.Builder()
-                .setRequiresStorageNotLow(false)
-                .setRequiresBatteryNotLow(false)
-                .setRequiresCharging(false)
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build()
-        }
-        val mOneTimeWorkRequest = OneTimeWorkRequest
-            .Builder(OneTimeWork::class.java)
-            .setInitialDelay(1L, TimeUnit.MINUTES)
-            .setConstraints(mConstraints)
+    suspend fun startSingleLog() = withContext(Dispatchers.Default) {
+        val wm = WorkManager.getInstance(context)
+
+        // Finish cancellation before re-enqueueing
+        wm.cancelUniqueWork(ONE_TIME_WORK_NAME).result.await()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<OneTimeWork>()
+            .setInitialDelay(1, TimeUnit.MINUTES)
+            .setConstraints(constraints)
             .addTag(ONE_TIME_WORK_TAG)
             .build()
 
-        mWorkManager
-            .enqueueUniqueWork(
-                ONE_TIME_WORK_NAME,
-                ExistingWorkPolicy.REPLACE,
-                mOneTimeWorkRequest
-            )
-
+        wm.enqueueUniqueWork(ONE_TIME_WORK_NAME, ExistingWorkPolicy.REPLACE, request)
     }
 
 
