@@ -105,7 +105,7 @@ class PeriodicHelper(private val context: Context) {
             val fetchList = db.gelCallsForSend(query)
             // db.gelCallsForSend(false)
             Timber.d("callss>> ${Gson().toJson(fetchList)}")
-
+            if(fetchList.isEmpty()) return@getCallLogs
             val jsonArray = JSONArray()
             fetchList.forEach { callData ->
                 val jsObject = JSONObject()

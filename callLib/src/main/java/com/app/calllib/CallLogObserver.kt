@@ -79,7 +79,7 @@ class CallLogObserver(
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)).toInt()
                         else
                             -1
-
+                    Log.d("CallLogObserver", "COUNTRY_ISO>> ${cursor.getColumnIndex(CallLog.Calls.COUNTRY_ISO)}")
                     callLogsData.number =
                         if (cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)) != null)
                             cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))

@@ -19,7 +19,7 @@ const val WORK_NAME = "CallFetch"
 const val WORK_TAG = "PeriodicCallWork"
 const val ONE_TIME_WORK_NAME = "oneTimeWorkNAME"
 const val ONE_TIME_WORK_TAG = "oneTimeWork"
-val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
+val sendDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.forLanguageTag("en-US-u-nu-latn"))
 
 
 @Suppress("DEPRECATION")

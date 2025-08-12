@@ -14,6 +14,10 @@ import androidx.core.view.WindowCompat
 import com.app.calllib.MainClass
 import com.app.calllib.convertMillisecondsToUTC
 import com.app.callsync.databinding.ActivityMainBinding
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,10 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { view ->
             //val map = mainClass.checkStorage()
-            val utc = convertMillisecondsToUTC(System.currentTimeMillis())
+         //   val utc = convertMillisecondsToUTC(System.currentTimeMillis())
             //println("Total Storage: ${map["total"]}")
            // println("Available Storage: ${map["available"]}")
-            println("Available utc: ${utc}")
+          //  println("Available utc: ${utc}")
+            getRegionFromPhoneNumber(binding.edtPhone.text.toString().trim(), "")
             /*val telecomManager =
                 getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager*/
            // val indext = getSimSlotIndexFromAccountId("8991000905134583709F")
@@ -147,5 +152,24 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d("MainActivity", "subId>> ${map}")
         return -1
+    }
+
+    fun getRegionFromPhoneNumber(phoneNumber: String, defaultRegion: String) {
+        val phoneNumberUtil = PhoneNumberUtil.getInstance()
+        try {
+            val parsedNumber = phoneNumberUtil.parse(phoneNumber, Locale.getDefault().country)
+            Log.d("MainActivity", "countryRegion>> ${Locale.getDefault().country}")
+            Log.d("MainActivity", "hasCountryCode>> ${parsedNumber.hasCountryCode()}")
+            Log.d("MainActivity", "hasNationalNumber>> ${parsedNumber.hasNationalNumber()}")
+            Log.d("MainActivity", "nationalNumber>> ${parsedNumber.nationalNumber}")
+            Log.d("MainActivity", "hasNumberOfLeadingZeros>> ${parsedNumber.hasNumberOfLeadingZeros()}")
+            Log.d("MainActivity", "hasPreferredDomesticCarrierCode>> ${parsedNumber.hasPreferredDomesticCarrierCode()}")
+
+            val region = phoneNumberUtil.getRegionCodeForNumber(parsedNumber)
+            binding.txtCode.text = "Country Code : ${region}"
+        } catch (e: NumberParseException) {
+            println("Error parsing number: ${e.message}")
+            null
+        }
     }
 }

@@ -73,24 +73,22 @@ class CallLogService : Service() {
             dismissedIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (SDK_INT >= Build.VERSION_CODES.O) {
 
             val mNotificationManager =
                     this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mNotificationManager.createNotificationChannelGroup(
-                    NotificationChannelGroup("dost_app", "Elogix")
-                )
-                val notificationChannel = NotificationChannel(
-                    NOTIFICATION_CHANNEL_ID,
-                    "Service Notifications",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                notificationChannel.enableLights(false)
-                notificationChannel.lockscreenVisibility = Notification.VISIBILITY_SECRET
-                mNotificationManager.createNotificationChannel(notificationChannel)
-            }
+            mNotificationManager.createNotificationChannelGroup(
+                NotificationChannelGroup("dost_app", "Elogix")
+            )
+            val notificationChannel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                "Service Notifications",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationChannel.enableLights(false)
+            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_SECRET
+            mNotificationManager.createNotificationChannel(notificationChannel)
             val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
 
             builder.setContentTitle(
