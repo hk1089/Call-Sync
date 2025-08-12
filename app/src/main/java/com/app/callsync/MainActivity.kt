@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     fun findSlotFromSubId(sm: SubscriptionManager, subId: Int): Int {
         try {
-            for (s in sm.activeSubscriptionInfoList) {
+            for (s in sm.activeSubscriptionInfoList ?: emptyList()) {
                 Log.d("MainActivity", "rounding>> ${s.subscriptionId} ${s.number}")
                 if (s.subscriptionId == subId) {
                     return s.simSlotIndex + 1

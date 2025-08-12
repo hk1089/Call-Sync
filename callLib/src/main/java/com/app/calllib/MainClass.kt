@@ -172,26 +172,27 @@ class MainClass @Inject constructor(val context: Context) {
         list.add(Manifest.permission.READ_PHONE_STATE)
         (context as FragmentActivity).permissions(list) { isGrant, _, denied ->
             if (isGrant && denied.isEmpty()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    val resultList = ArrayList<Any>()
-                    val jsonArray = JSONArray()
-                    val subscriptionInfoList: MutableList<SubscriptionInfo> =
-                        SubscriptionManager.from(context).activeSubscriptionInfoList
-                    if (subscriptionInfoList.isNotEmpty()) {
-                        subscriptionInfoList.forEach {
+                val resultList = ArrayList<Any>()
+                val jsonArray = JSONArray()
+                val subscriptionInfoList: List<SubscriptionInfo?>? =
+                    SubscriptionManager.from(context).activeSubscriptionInfoList
+                subscriptionInfoList?.let { list ->
+                    if (list.isNotEmpty()) {
+                        list.forEach {
                             val resultMap = java.util.HashMap<String, String>()
-                            resultMap["id"] = it.subscriptionId.toString()
-                            resultMap["name"] = it.carrierName.toString()
+                            resultMap["id"] = it?.subscriptionId.toString()
+                            resultMap["name"] = it?.carrierName.toString()
                             val jsonObject = JSONObject()
-                            jsonObject.put("id", it.subscriptionId)
-                            jsonObject.put("name", it.carrierName)
+                            jsonObject.put("id", it?.subscriptionId ?: "0")
+                            jsonObject.put("name", it?.carrierName?: "")
                             jsonArray.put(jsonObject)
                             resultList.add(resultMap)
-                            Timber.d("Info>> ${it.carrierName}, ${it.subscriptionId}")
+                            Timber.d("Info>> ${it?.carrierName}, ${it?.subscriptionId}")
                         }
                     }
-                    listener.invoke(jsonArray.toString())
                 }
+
+                listener.invoke(jsonArray.toString())
             }
         }
     }
@@ -238,12 +239,12 @@ class MainClass @Inject constructor(val context: Context) {
         val infoSim2 = sManager.getActiveSubscriptionInfoForSimSlotIndex(1)
         var slot1 = -1
         var slot2 = -1
-        if (infoSim1 != null) {
-            slot1 = findSlotFromSubId(sManager, infoSim1.subscriptionId)
+        infoSim1?.let {
+            slot1 = findSlotFromSubId(sManager, it.subscriptionId)
             Log.d("MainClass", "infoSim1 simSlotIndex>> $slot1")
         }
-        if (infoSim2 != null) {
-            slot2 = findSlotFromSubId(sManager, infoSim2.subscriptionId)
+        infoSim2?.let {
+            slot2 = findSlotFromSubId(sManager, it.subscriptionId)
             Log.d("MainClass", "infoSim2 simSlotIndex>> $slot2")
         }
         return getSimSubscriptionId(slot1, slot2)
@@ -267,7 +268,7 @@ class MainClass @Inject constructor(val context: Context) {
 
     private fun findSlotFromSubId(sm: SubscriptionManager, subId: Int): Int {
         try {
-            for (s in sm.activeSubscriptionInfoList) {
+            for (s in sm.activeSubscriptionInfoList ?: emptyList()) {
                 Log.d("MainClass", "rounding>> ${s.subscriptionId}")
                 if (s.subscriptionId == subId) {
                     return s.simSlotIndex + 1
