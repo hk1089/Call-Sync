@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             val map = HashMap<String, Any>()
             map["sim_slot_index"] = "1"
             map["aduserid"] = 419
-            map["isSimSlot"] = "89918680400238854737"
+            map["isSimSlot"] = "4"
             map["URL_CL"] = "https://xswift.biz/api//lr-module/setUserCallLogs"
             map["LAST_LOG_TIME"] = ""
             map["is_cache_clear"] = false
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             headerMap["Content-Type"] = "application/json"
             headerMap["entrymode"] = "1"
             headerMap["authkey"] =
-                "eyJhbGciOiJIUzI1NiJ9.eyJpc0N0VXNlciI6dHJ1ZSwibmFtZSI6IkFua2l0IEphbmdpZCIsInRpbWUiOiIyMDI0LTA5LTAzVDExOjM3OjUxLjExNzIzMFoiLCJtb2JpbGVObyI6NjM3Njc2MDA3OCwiaWQiOjQxOSwiZXhwIjoxNzU1MDY2NDc4LCJpYXQiOjE3NTQ5ODAwNzgsImVtYWlsIjpudWxsLCJlbnRyeU1vZGUiOjF9.yRPxKAKTzo3c16Ipk-pSGfbx1fgbDC_MWhNNLe1BLbQ"
+                "eyJhbGciOiJIUzI1NiJ9.eyJpc0N0VXNlciI6ZmFsc2UsIm5hbWUiOiJBbmtpdCBKYW5naWQiLCJ0aW1lIjoiMjAyNC0wOS0wM1QxMTozNzo1MS4xMTcyMzBaIiwibW9iaWxlTm8iOjYzNzY3NjAwNzgsImlkIjo0MTksImV4cCI6MTc1NjI2NzcyOSwiaWF0IjoxNzU2MTgxMzI5LCJlbWFpbCI6bnVsbCwiZW50cnlNb2RlIjoxfQ.qwjpwyr9bUj-oo-sPzh4MqIrIG-q6SvMVZbutDEKMJ4"
             map["headers"] = headerMap
             mainClass.initializeValue(map)
             mainClass.doTask()

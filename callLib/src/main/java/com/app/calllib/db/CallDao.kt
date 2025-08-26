@@ -33,4 +33,7 @@ interface CallDao {
 
     @RawQuery
     fun deleteAll(query: SupportSQLiteQuery): Int
+
+    @Query("SELECT EXISTS(SELECT 1 FROM calls_table WHERE timeMilli = :timeMilli)")
+    fun callExistsByTimeMilli(timeMilli: Long): Boolean
 }

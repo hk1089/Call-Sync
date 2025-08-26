@@ -17,13 +17,36 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.CallLog
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import java.util.concurrent.atomic.AtomicBoolean
 
 class CallLogService : Service() {
     private lateinit var callLogObserver: CallLogObserver
+    private val isRunning = AtomicBoolean(false)
+    
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "dost_call_log_reading"
+        private var instance: CallLogService? = null
+        
+        fun getInstance(): CallLogService? = instance
+        
+        fun isServiceRunning(): Boolean {
+            return instance != null && instance!!.isRunning.get()
+        }
+        
+        fun stopService(context: Context) {
+            instance?.let {
+                it.isRunning.set(false)
+                context.stopService(Intent(context, CallLogService::class.java))
+            }
+        }
+    }
+    
     override fun onCreate() {
         super.onCreate()
+        instance = this
         if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
                 onNotificationDismissedReceiver,
@@ -43,6 +66,8 @@ class CallLogService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        instance = null
+        isRunning.set(false)
         if (this::callLogObserver.isInitialized)
             contentResolver.unregisterContentObserver(callLogObserver)
 
@@ -52,19 +77,35 @@ class CallLogService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Prevent multiple instances
+        if (isRunning.get()) {
+            Log.d("CallLogService", "Service already running, ignoring start command")
+            return START_STICKY
+        }
+        
+        isRunning.set(true)
         generateForegroundNotification()
+        
+        // Unregister existing observer if any
+        if (this::callLogObserver.isInitialized) {
+            try {
+                contentResolver.unregisterContentObserver(callLogObserver)
+            } catch (e: Exception) {
+                Log.e("CallLogService", "Error unregistering observer", e)
+            }
+        }
+        
         callLogObserver = CallLogObserver(this, contentResolver, Handler(Looper.getMainLooper()))
         contentResolver.registerContentObserver(
             CallLog.Calls.CONTENT_URI,
             true,
             callLogObserver
         )
+        
+        Log.d("CallLogService", "Service started successfully")
         return START_STICKY
     }
 
-    companion object {
-        private const val NOTIFICATION_CHANNEL_ID = "dost_call_log_reading"
-    }
     private fun generateForegroundNotification() {
         val dismissedIntent = Intent("DISMISSED_ACTION")
         dismissedIntent.setPackage(packageName) // This is required on Android 14

@@ -70,12 +70,15 @@ class MainClass @Inject constructor(val context: Context) {
         }
         prefStorage.selectedSim = map["isSimSlot"] as String
         prefStorage.simSlotIndex = map["sim_slot_index"] as String
-        if (!context.isServiceRunning(CallLogService::class.java)) {
+        // Check if service is already running using singleton pattern
+        if (!CallLogService.isServiceRunning() && !context.isServiceRunning(CallLogService::class.java)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(Intent(context, CallLogService::class.java))
             } else {
                 context.startService(Intent(context, CallLogService::class.java))
             }
+        } else {
+            Log.d("MainClass", "CallLogService already running, skipping start")
         }
         // val callLogObserver = CallLogObserver(context.contentResolver, Handler(Looper.getMainLooper()))
         // context.contentResolver.registerContentObserver(CallLog.Calls.CONTENT_URI, true, callLogObserver)
@@ -85,12 +88,13 @@ class MainClass @Inject constructor(val context: Context) {
     }
 
     fun stopService(context: Context) {
+        // Stop the CallLogService
+        CallLogService.stopService(context)
+        
         if (getStateOfWork() != WorkInfo.State.ENQUEUED && getStateOfWork() != WorkInfo.State.RUNNING)
             doTask()
         else
             periodicHelper.stopLog(context)
-
-
     }
 
     fun doTask() {

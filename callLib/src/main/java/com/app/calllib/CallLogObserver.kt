@@ -18,6 +18,7 @@ import org.json.JSONObject
 import timber.log.Timber
 import toothpick.Toothpick
 import java.util.Calendar
+import java.util.concurrent.ConcurrentHashMap
 
 class CallLogObserver(
     private val context: Context,
@@ -28,6 +29,9 @@ class CallLogObserver(
 
     companion object {
         private const val TAG = "CallLogObserver"
+        private const val DEBOUNCE_DELAY = 2000L // 2 seconds debounce
+        private val processedCallIds = ConcurrentHashMap<String, Long>() // Track processed call IDs with timestamp
+        private val lastChangeTime = ConcurrentHashMap<String, Long>() // Track last change time per URI
     }
 
     private val prefStorage: PrefStorage =
@@ -36,12 +40,23 @@ class CallLogObserver(
     @SuppressLint("Range")
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         super.onChange(selfChange, uri)
-        Log.d(TAG, "Call log changed")
+        Log.d(TAG, "Call log changed > $selfChange, URI: $uri")
+        
+        // Debounce mechanism - prevent multiple rapid calls
+        val uriKey = uri?.toString() ?: "default"
+        val currentTime = System.currentTimeMillis()
+        val lastTime = if (lastChangeTime.containsKey(uriKey)) lastChangeTime[uriKey]!! else 0L
+        
+        if (currentTime - lastTime < DEBOUNCE_DELAY) {
+            Log.d(TAG, "Debouncing call log change - too soon since last change")
+            return
+        }
+        
+        lastChangeTime[uriKey] = currentTime
+        
         val calendar = Calendar.getInstance()
         // Query the call log for the latest call
         try {
-
-
             val cursor = contentResolver.query(
                 CallLog.Calls.CONTENT_URI,
                 null,
@@ -137,9 +152,39 @@ class CallLogObserver(
                         }
                     if (callLogsData.timeMilli > System.currentTimeMillis())
                         return
+                        
+                    // Check if this call has already been processed recently
+                    val callKey = "${callLogsData.id}_${callLogsData.timeMilli}_${callLogsData.number}"
+                    val lastProcessedTime = if (processedCallIds.containsKey(callKey)) processedCallIds[callKey]!! else 0L
+                    if (currentTime - lastProcessedTime < DEBOUNCE_DELAY) {
+                        Log.d(TAG, "Call already processed recently: $callKey")
+                        return
+                    }
+                    
+                    // Mark this call as processed
+                    processedCallIds[callKey] = currentTime
+                    Log.d(TAG, "Processing call: $callKey")
+                    
+                    // Clean up old entries (older than 1 hour)
+                    val oneHourAgo = currentTime - (60 * 60 * 1000)
+                    val iterator = processedCallIds.entries.iterator()
+                    var removedCount = 0
+                    while (iterator.hasNext()) {
+                        val entry = iterator.next()
+                        if (entry.value < oneHourAgo) {
+                            iterator.remove()
+                            removedCount++
+                        }
+                    }
+                    if (removedCount > 0) {
+                        Log.d(TAG, "Cleaned up $removedCount old call entries")
+                    }
+                    
                     val db: CallDao = CallsDatabase.getInstance(context)?.callDao()!!
                     val jsonArray = JSONArray()
                     val jsObject = JSONObject()
+                    Log.d("CallLogObserver", "callExistsByTimeMilli>> ${db.callExistsByTimeMilli(callLogsData.timeMilli)}")
+                    if (db.callExistsByTimeMilli(callLogsData.timeMilli)) return
                     jsObject.put("callerID", callLogsData.callerID)
                     jsObject.put("name", callLogsData.name)
                     jsObject.put("number", callLogsData.number)
